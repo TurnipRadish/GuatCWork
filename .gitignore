@@ -1,0 +1,12 @@
+
+*.vsidx
+*.ipch
+*.db-shm
+*.db
+*.lock
+*.db-wal
+*.opendb
+*.vcxproj
+*.filters
+*.sln
+*.user
