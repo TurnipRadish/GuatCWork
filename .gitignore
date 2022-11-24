@@ -10,3 +10,13 @@
 *.filters
 *.sln
 *.user
+*.vs
+*.recipe
+*.ilk
+*.pdb
+*.tlog
+*.txt
+*.obj
+*.log
+*.idb
+*.exe
