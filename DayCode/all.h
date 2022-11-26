@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <math.h>
 #define MAX_N (30)
 int char_pos1[MAX_N], char_pos2[MAX_N];
@@ -576,6 +577,137 @@ int w2_31(void)
     solve(n);
     return 0;
 }
+/*******************************************************************************/
+long long hanoi(int num) {
+    /**********Begin**********/
+    if (num == 1) return 2;
+    else if (num == 2) return 8;
+    else return (4 * hanoi(num - 1) - 3 * hanoi(num - 2)); // h(n) = 4 * h(n - 1) - 3 * h(n - 2);
+    /**********End**********/
+}
+int main() {
+    int n;
+    while (scanf("%d", &n) != EOF) {
+        printf("%lld\n", hanoi(n));
+    }
+    return 0;
+}
+
+/*******************************************************************************/
+#define N(x) (sizeof(x)/sizeof(x[0]))
+void bub(int[], int);
+int w2_33()
+{
+    int n, i, a[102];
+    scanf_s("%d", &n);
+    for (i = 0; i < n; i++)
+        scanf_s("%d", &a[i]);
+    bub(a, n);
+    for (i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+    return 0;
+}
+
+void bub(int a[], int n)//修改后的冒泡排序
+{
+    /**********Begin**********/
+    int i; int j;
+    for (i = 0; i < n - 1; ++i) {
+        for (j = 0; j < n - 1 - i; ++j) {
+            if (abs(a[j]) > abs(a[j + 1])) {
+                    int t = a[j];
+                    a[j] = a[j + 1];
+                    a[j + 1] = t;
+            }
+            else if (abs(a[j]) == abs(a[j + 1])) {
+                if (a[j] > 0 && a[j + 1] < 0) {
+                    int t = a[j];
+                    a[j] = a[j + 1];
+                    a[j = 1] = t;
+                }
+            }
+        }
+    }
+    /**********End**********/
+}
+
+/*******************************************************************************/
+#define MAXN (110)
+int n, s, m;
+int vis[MAXN];
+int go(int x)//找到下一个人
+{
+    /**********Begin**********/
+    while (vis[(x + 1) % n] == 1) x++;
+    return (x + 1) % n;
+    /**********End**********/
+}
+int w2_34()
+{
+    int i, j;
+    scanf_s("%d%d%d", &n, &s, &m);
+    --s;//和数组下标从0开始对应
+    for (i = 0; i < n - 1; ++i)
+    {
+        for (j = 1; j < m; ++j)
+        {
+            s = go(s);
+        }//模拟进行m次报数
+        printf("%d\n", s + 1);
+        vis[s] = 1;//标记已经出队
+        s = go(s);
+    }
+    printf("%d\n", go(s) + 1);
+    return 0;
+}
+
+/*******************************************************************************/
+long long a[1001], l[1001], r[1001];
+/**********Begin**********/
+long long leftmax(int n)    //计算当前柱子左边最高的高度
+{
+    int i; int max = a[0];
+    for (i = 1; i <= n; ++i) {
+        if (a[i] > max) max = a[i];
+    }
+    return max;
+}
+
+long long rightmax(int n, int r)   //计算当前柱子右边最高的高度
+{
+    int i, max = a[n + 1];
+    for (i = n + 1; i <= r; ++i) {
+        if (a[i] > max) max = a[i];
+    }
+    return max
+}
+
+long long less(long long a, long long b)
+{
+    if (a < b) return a;
+}
+
+/**********End**********/
+int w2_35() {
+    int n, i;
+    long long high = 0;
+    scanf_s("%d", &n);
+    for (i = 0; i < n; i++)
+        scanf_s("%lld", &a[i]);
+    if (n <= 2)
+        printf("0\n");
+    else {
+        for (i = 1; i < n - 1; i++) {
+            l[i] = leftmax(i);
+            r[i] = rightmax(i, n - 1);
+        }
+        for (i = 1; i < n - 1; i++)
+            high += less(l[i], r[i]) - a[i];  //计算当前柱子上方蓄积的水体积
+        printf("%lld\n", high);
+    }
+}
 
 /*******************************************************************************/
 
+/*******************************************************************************/
