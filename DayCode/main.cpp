@@ -1,4 +1,4 @@
-#include "now.h"
+﻿#include "now.h"
 
 int main() {
 	w2_36();

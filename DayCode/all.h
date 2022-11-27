@@ -709,5 +709,180 @@ int w2_35() {
 }
 
 /*******************************************************************************/
+int cmp(const void* a, const void* b) {
+    if ((*(int*)a) < (*(int*)b)) return 1;
+    else if ((*(int*)a) == (*(int*)b)) return 0;
+    else return -1;
+}
+
+int inr(int x3, int y3, int x4, int y4, int x1, int y1, int x2, int y2) {
+    int x[4] = { 0 };
+    x[0] = x1; x[1] = x2;
+    x[2] = x3; x[3] = x4;
+    qsort(x, 4, sizeof(x[0]), cmp);
+    int y[5] = {};
+    y[0] = y1; y[1] = y2;
+    y[2] = y3; y[3] = y4;
+    qsort(y, 4, sizeof(y[0]), cmp);
+
+    return abs(x[1] - x[2]) * abs(y[1] - y[2]);
+}
+
+
+int w2_36() {
+    int data[100] = {};
+    int x1, x2, x3, x4, x5, x6;
+    int y1, y2, y3, y4, y5, y6;
+    int n = 0;
+    int i = 0;
+    int res = 0; int s = 0;
+    scanf_s("%d", &n);
+    for (i = 0; i < n; ++i) {
+        scanf_s("%d%d%d%d%d%d%d%d%d%d%d%d", &x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4, &x5, &y5, &x6, &y6);
+        s = abs(x1 - x2) * abs(y1 - y2);
+        res = inr(x3, y3, x4, y4, x1, y1, x2, y2) +
+            inr(x5, y5, x6, y6, x1, y1, x2, y2);
+        res = s - res;
+        data[i] = res;
+    }
+
+    for (i = 0; i < n; ++i) printf("%d\n", data[i]);
+    return 0;
+}
 
 /*******************************************************************************/
+int fun(int x)  //用来计算一个数所需要的火柴棍总数
+{
+    /**********Begin**********/
+    char s[100] = {};
+    sprintf_s(s, 100, "%d", x);
+    int i; int res = 0;
+    for (i = 0; s[i] != '\0'; ++i) {
+        int test = s[i] - '0';
+        if (test == 0) res += 6;
+        else if (test == 1) res += 2;
+        else if (test == 2) res += 5;
+        else if (test == 3) res += 5;
+        else if (test == 4) res += 4;
+        else if (test == 5) res += 5;
+        else if (test == 6) res += 6;
+        else if (test == 7) res += 3;
+        else if (test == 8) res += 7;
+        else if (test == 9) res += 6;
+        /**********End**********/
+    }
+    return res;
+}
+int w2_37()
+{
+    int a, b, c, n, sum = 0;
+    scanf_s("%d", &n);        //火柴棍总个数
+    for (a = 0; a <= 1111; a++) //开始枚举
+    {
+        for (b = 0; b <= 1111; b++)
+        {
+            c = a + b;
+            if (fun(a) + fun(b) + fun(c) == n - 4)  //去掉+和=
+                sum++;
+        }
+    }
+    printf("%d", sum);
+    return 0;
+}
+
+/*******************************************************************************/
+#define MAXN (1000)
+int img[MAXN][MAXN] = { 0 };
+int out[MAXN][MAXN] = { 0 };
+int core[MAXN][MAXN] = { 0 };
+int h, w, m;
+
+void conv()
+{
+    /**********Begin**********/
+    int i, j, k, z, x, y;
+    i = j = k = z = x = y = 0;
+    for (i = 0; i < h - m + 1; ++i) {
+        for (j = 0; j < w - m + 1; ++j) {
+            int res = 0;
+            for (k = 0; k < m; ++k) {
+                for (z = 0; z < m; ++z) {
+                    res += core[k][z] * img[i + k][j + z];
+                }
+
+            }
+            out[x][y++] = res;
+            if (y >= w - m + 1) {
+                y = 0;
+                x++;
+            }
+        }
+    }
+
+    /**********End**********/
+}
+
+int w2_38()
+{
+    int i, j;
+    scanf_s("%d %d %d", &h, &w, &m);
+    for (i = 0; i < h; i++) //被卷积矩阵
+        for (j = 0; j < w; j++)
+            scanf_s("%d", &img[i][j]);
+    for (i = 0; i < m; i++) //卷积核
+        for (j = 0; j < m; j++)
+            scanf_s("%d", &core[i][j]);
+    conv();
+    for (i = 0; i <= h - m; i++)
+    {
+        for (j = 0; j <= w - m; j++)
+            printf("%d ", out[i][j]);
+        printf("\n");
+    }
+    return 0;
+}
+
+/*******************************************************************************/
+int a[100][100] = {};
+int f(int m, int n, int x, int y) {
+    /**********Begin**********/
+    int i; int j;
+    int k = 0, z = 0;
+    int counter = 1;
+    int deep = 0;
+    for (i = 0; i < m * n; ++i) {
+        if (z <= n - 2 - deep && k == deep) a[k][z++] = counter++;
+        else if (z == n - 1 - deep && k <= m - 2 - deep) a[k++][z] = counter++;
+        else if (z >= 1 + deep && k == m - 1 - deep) a[k][z--] = counter++;
+        else if (z == deep && k >= 1 + deep) {
+            a[k--][z] = counter++;
+            if (k == deep) {
+                deep++;
+                k = z = deep;
+            }
+        }
+        // 10 12 8   10
+    }
+    if (m == n && m % 2 != 0) {
+        a[(m - 1) / 2][(m - 1) / 2] = m * n;
+    }
+    printf("\n");
+    for (i = 0; i < m; ++i) {
+        for (j = 0; j < n; ++j) {
+            printf("%5d ", a[i][j]);
+        }printf("\n");
+    }printf("\n");
+    return a[x - 1][y - 1];
+    /**********End**********/
+}
+int w2_40() {
+    int m, n, x, y;
+    scanf_s("%d%d%d%d", &m, &n, &x, &y);
+    int ans = f(m, n, x, y);
+    printf("%d\n", ans);
+    return 0;
+}
+
+/*******************************************************************************/
+
+
