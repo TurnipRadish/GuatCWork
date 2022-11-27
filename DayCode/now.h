@@ -8,21 +8,41 @@
 int cmp(const void* a, const void* b) {
     int t1 = (*(int*)a);
     int t2 = (*(int*)b);
-    if (t1 < t2) return 1;
+    if (t1 > t2) return 1;
     else if (t1 == t2) return 0;
     else return -1;
 }
 
-int inr(int x3, int y3, int x4, int y4, int x1, int y1, int x2, int y2) {
-    int x[4] = { 0 };
-    x[0] = x1; x[1] = x2;
-    x[2] = x3; x[3] = x4;
-    qsort(x, 4, sizeof(x[0]), cmp);
-    int y[5] = { 0 };
-    y[0] = y1; y[1] = y2;
-    y[2] = y3; y[3] = y4;
-    qsort(y, 4, sizeof(y[0]), cmp);
-    return abs(x[1] - x[2]) * abs(y[1] - y[2]);
+int more(int a, int b) {
+    if (a > b) return a;
+    return b;
+}
+
+int less(int a, int b) {
+    if (a < b) return a;
+    return b;
+}
+
+int inr2(int x3, int y3, int x4, int y4, int x1, int y1, int x2, int y2) {
+    int ox = less(more(x3, x4), more(x1, x2)) - more(less(x3, x4), less(x1, x2));
+    int ty1 = less(more(y3, y4), more(y1, y2));
+    int ty2 = more(less(y3, y4), less(y1, y2));
+    int oy = ty1 - ty2;
+    if (ox <= 0 || oy <= 0) return 0;
+    else return ox * oy;
+}
+
+int inr3(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int x5, int y5, int x6, int y6) {
+
+    int ox = less(more(x5, x6), more(x3, x4)) - more(less(x5, x6), less(x3, x4));
+    int oy = less(more(y5, y6), more(y3, y4)) - more(less(y5, y6), less(y3, y4));
+    if (ox <= 0 || oy <= 0) return 0;
+    else {
+        int ox = less(less(more(x5, x6), more(x3, x4)), more(x1, x2)) - more(more(less(x5, x6), less(x3, x4)), less(x1, x2));
+        int oy = less(less(more(y5, y6), more(y3, y4)), more(y1, y2)) - more(more(less(y5, y6), less(y3, y4)), less(y1, y2));
+        if (ox <= 0 || oy <= 0) return 0;
+        else return ox * oy;
+    }
 }
 
 int w2_36() {
@@ -36,9 +56,10 @@ int w2_36() {
     for (i = 0; i < n; ++i) {
         scanf_s("%d%d%d%d%d%d%d%d%d%d%d%d", &x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4, &x5, &y5, &x6, &y6);
         s = abs(x1 - x2) * abs(y1 - y2);
-        res = inr(x3, y3, x4, y4, x1, y1, x2, y2) +
-            inr(x5, y5, x6, y6, x1, y1, x2, y2);
-        res = s - res;
+        int inr2_area1 = inr2(x3, y3, x4, y4, x1, y1, x2, y2);
+        int inr2_area2 = inr2(x5, y5, x6, y6, x1, y1, x2, y2);
+        int inr3_area = inr3(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6);
+        res = s - inr2_area1 - inr2_area2 + inr3_area;
         data[i] = res;
     }
     for (i = 0; i < n; ++i) printf("%d\n", data[i]);
